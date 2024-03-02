@@ -1,0 +1,18 @@
+3/2
+先讓他能夠整理
+* 股票編號 ✅
+* 個股票所屬產業資訊 (49)
+* 股價 ✅
+* 近期新聞 (49)
+* EPS
+* 公司淨利潤
+* 債務
+* 現金流
+Link 1: https://histock.tw/stock/2330/%E8%B2%A1%E5%8B%99%E5%A0%B1%E8%A1%A8
+Link 2: https://goodinfo.tw/tw/StockBzPerformance.asp?STOCK_ID=2330
+Link 3: https://tw.stock.yahoo.com/quote/2330.TW/eps
+
+
+
+
+
