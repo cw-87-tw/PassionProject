@@ -68,10 +68,29 @@ def getCash():
     print(result)
     return result
 
+def getRoeRoa():
+    setRange(f"https://statementdog.com/analysis/{target}/roe-roa")
+    sleep(2)
+    result = dict()
+    result["ROE"] = getText(f"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[2]/div[1]/ul/li[2]/table/tr[2]/td[{index}]")
+    result["ROA"] = getText(f"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[2]/div[1]/ul/li[2]/table/tr[3]/td[{index}]")
+    print(result)
+    return result
+
+def getDebt():
+    setRange(f"https://statementdog.com/analysis/{target}/liabilities-and-equity")
+    sleep(2)
+    result = dict()
+    result["總負債"] = getText(f"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[2]/div[1]/ul/li[2]/table/tr[11]/td[{index}]")
+    print(result)
+    return result
+
 # getInformation()
 login()
 getIncome()
 getCash()
+getRoeRoa()
+
 # driver.quit()    
 
 # test()
