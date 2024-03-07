@@ -1,10 +1,9 @@
 from selenium import webdriver
-from os import system as sys
 from time import sleep
 from selenium.webdriver.firefox.options import Options
 
 options = Options()
-# options.add_argument("--headless") # 顯示瀏覽器視窗
+# options.add_argument("--headless") # 隱藏瀏覽器視窗
 driver = webdriver.Firefox(options = options)
 
 # tools
@@ -20,13 +19,14 @@ beginYear = 2009
 index = 1
 
 # process
-def getInformation():
+def setInformation(year, season, _target):
     global target
     global index
-    target = input("輸入查詢編號:")
-    year = int(input("查詢年份:"))
-    season = int(input("查詢季度:"))
-    index = (year - 2009) * 4 + season
+    target = _target
+    # target = input("輸入查詢編號:")
+    # year = int(input("查詢年份:"))
+    # season = int(input("查詢季度:"))
+    index = (int(year) - 2009) * 4 + int(season)
 
 def login():
     driver.get('https://statementdog.com/users/sign_in')
@@ -37,7 +37,7 @@ def login():
 
 def setRange(url):
     driver.get(url)
-    sleep(1)
+    sleep(2)
     clickButton(r"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[1]/div[1]/table/tr/td[1]/div[1]/i")
     clickButton(r"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[1]/div[1]/table/tr/td[1]/ul/li[4]")
     #2009
@@ -87,9 +87,12 @@ def getDebt():
 
 # getInformation()
 login()
-getIncome()
-getCash()
-getRoeRoa()
+getDebt()
+# getIncome()
+# getCash()
+# getRoeRoa()
+
+
 
 # driver.quit()    
 
