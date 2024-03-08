@@ -17,16 +17,16 @@ def init():
     global entry_year
     global entry_season
     global entry_user
-    label_target = tk.Label(root, text="輸入查詢編號:", font=("Helvetica", 12))  # 設置字型大小為12
-    entry_target = tk.Entry(root)
-    label_year = tk.Label(root, text="查詢年份:", font=("Helvetica", 12))  # 設置字型大小為12
-    entry_year = tk.Entry(root)
-    label_season = tk.Label(root, text="查詢季度:", font=("Helvetica", 12))  # 設置字型大小為12
-    entry_season = tk.Entry(root)
-    label_user = tk.Label(root, text="使用者:", font=("Helvetica", 12))  # 設置字型大小為12
-    entry_user= tk.Entry(root)
+    label_target = tk.Label(root, text="輸入查詢編號:", font=("Microsoft JhengHei UI", 16))  # 設置字型大小為12
+    entry_target = tk.Entry(root, font=("Microsoft JhengHei UI", 16))
+    label_year = tk.Label(root, text="查詢年份:", font=("Microsoft JhengHei UI", 16))  # 設置字型大小為12
+    entry_year = tk.Entry(root, font=("Microsoft JhengHei UI", 16))
+    label_season = tk.Label(root, text="查詢季度:", font=("Microsoft JhengHei UI", 16))  # 設置字型大小為12
+    entry_season = tk.Entry(root, font=("Microsoft JhengHei UI", 16))
+    label_user = tk.Label(root, text="使用者:", font=("Microsoft JhengHei UI", 16))  # 設置字型大小為12
+    entry_user= tk.Entry(root, font=("Microsoft JhengHei UI", 16))
     global button_search
-    button_search = tk.Button(root, text="查詢", command=search)
+    button_search = tk.Button(root, text="查詢", font=("Microsoft JhengHei UI", 16), command=search)
     global tree
     tree = ttk.Treeview(root, columns=("Attribute", "Value"), show="headings")
     tree.heading("Attribute", text="Attribute")
