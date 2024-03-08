@@ -28,10 +28,10 @@ def setInformation(year, season, _target):
     # season = int(input("查詢季度:"))
     index = (int(year) - 2009) * 4 + int(season)
 
-def login():
+def login(id):
     driver.get('https://statementdog.com/users/sign_in')
     try:
-        boxType(r'//*[@id="user_email"]', "h1110551@stu.wghs.tp.edu.tw")
+        boxType(r'//*[@id="user_email"]', f"h11105{id}@stu.wghs.tp.edu.tw")
         boxType(r'//*[@id="user_password"]', "passion")
         clickButton("/html/body/div[3]/div[1]/form/div/button")
     except: pass
