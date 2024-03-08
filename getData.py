@@ -3,7 +3,7 @@ from time import sleep
 from selenium.webdriver.firefox.options import Options
 
 options = Options()
-# options.add_argument("--headless") # 隱藏瀏覽器視窗
+options.add_argument("--headless") # 隱藏瀏覽器視窗
 driver = webdriver.Firefox(options = options)
 
 # tools
@@ -30,9 +30,11 @@ def setInformation(year, season, _target):
 
 def login():
     driver.get('https://statementdog.com/users/sign_in')
-    boxType(r'//*[@id="user_email"]', "h1110539@stu.wghs.tp.edu.tw")
-    boxType(r'//*[@id="user_password"]', "passion")
-    clickButton("/html/body/div[3]/div[1]/form/div/button")
+    try:
+        boxType(r'//*[@id="user_email"]', "h1110551@stu.wghs.tp.edu.tw")
+        boxType(r'//*[@id="user_password"]', "passion")
+        clickButton("/html/body/div[3]/div[1]/form/div/button")
+    except: pass
     sleep(1)
 
 def setRange(url):
@@ -86,8 +88,8 @@ def getDebt():
     return result
 
 # getInformation()
-login()
-getDebt()
+# login()
+# getDebt()
 # getIncome()
 # getCash()
 # getRoeRoa()
