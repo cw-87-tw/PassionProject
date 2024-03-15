@@ -1,4 +1,9 @@
-from selenium import webdriver
+try:
+    from selenium import webdriver
+except:
+    import os
+    os.system("pip install selenium")
+    from selenium import webdriver
 from time import sleep
 from selenium.webdriver.firefox.options import Options
 
