@@ -56,10 +56,12 @@ def changeButton(text, state):
 
 def show_result(result):
     global previousResult
-    for i in previousResult: tree.remove(i)
+    print(previousResult)
+    for i in previousResult: tree.delete(i)
     previousResult.clear()
     for key, value in result.items():
         previousResult.append(tree.insert("", "end", values=(key, value)))
+    print(previousResult)
     # previousResult = result
         
 def search():
@@ -73,9 +75,9 @@ def search():
         results.update(getCash())
         results.update(getDebt())
         results.update(getRoeRoa())
-        pass
-    except:
-        results["Error"] = "出現錯誤"
+    except Exception:
+        print(Exception)
+        results["Error"] = "出現錯誤，請更換座號再試一次"
     changeButton(text="查詢", state = "normal")
     show_result(result=results)
     root.update()
