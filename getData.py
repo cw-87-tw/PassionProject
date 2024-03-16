@@ -10,6 +10,7 @@ from selenium.webdriver.firefox.options import Options
 options = Options()
 options.add_argument("--headless") # 隱藏瀏覽器視窗
 driver = webdriver.Firefox(options = options)
+print("start web driver")
 
 # tools
 def clickButton(xpath): driver.find_element(by = "xpath", value = xpath).click()

@@ -3,6 +3,8 @@ from tkinter import ttk
 from getData import *
 root = tk.Tk()
 
+print("start TK")
+
 def init():
     root.title("Passion 財務報表查詢")
     root.geometry("800x800")
@@ -44,7 +46,7 @@ def init():
     entry_user.grid(row=3, column=1, padx=10, pady=10, sticky="nsew")
     button_search.grid(row=4, columnspan=2, padx=10, pady=10, sticky="nsew")
     tree.grid(row=5, columnspan=2, padx=10, pady=10, sticky="nsew")
-
+    
     # 設置Treeview文字大小
     style = ttk.Style()
     style.configure("Treeview", font=("Microsoft JhengHei UI", 14))  # 設置字型大小為14
