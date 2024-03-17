@@ -88,7 +88,7 @@ def save_to_excel(results : dict, name):
     l.append([name] + list(results.values()))
     name = len(l)
     ws.append([name] + list(results.values()))
-    wb.save("results.xlsx")
+    wb.save(f"{entry_year.get()}年第{entry_season.get()}季.xlsx")
 
 def search():
     changeButton(text="搜尋中...請稍候", state = "disabled")
@@ -96,7 +96,7 @@ def search():
     stock_numbers = read_stock_numbers_from_excel("stocks1.xlsx")
     for stock in stock_numbers:
         setInformation(entry_year.get(), entry_season.get(), stock)
-        with open("accs.txt", "r", encoding = "utf-8") as file:
+        with open("output1.txt", "r", encoding = "utf-8") as file:
             ids = file.read().splitlines()
         while 1:
             try:
