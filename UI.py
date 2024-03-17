@@ -95,6 +95,11 @@ def save_to_excel(results : dict, name):
 def search():
     changeButton(text="搜尋中...請稍候", state = "disabled")
     root.update()
+    l.clear()
+    global wb
+    wb = openpyxl.Workbook()
+    global ws
+    ws = wb.active
     stock_numbers = read_stock_numbers_from_excel("stocks.xlsx")
     cnt = 1
     login("h1110539@stu.wghs.tp.edu.tw")
