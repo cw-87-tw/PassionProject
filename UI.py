@@ -1,6 +1,12 @@
 import tkinter as tk
 from tkinter import ttk
 from getData import *
+try:
+    import openpyxl
+except:
+    import os
+    os.system("pip install openpyxl")
+    import openpyxl
 root = tk.Tk()
 
 print("start TK")
@@ -9,24 +15,24 @@ def init():
     root.title("Passion 財務報表查詢")
     root.geometry("800x800")
 
-    for i in range(5):
+    for i in range(3):
         root.rowconfigure(i, weight=1)
-    root.rowconfigure(5, weight = 3)
+    root.rowconfigure(3, weight = 3)
     for i in range(2):
         root.columnconfigure(i, weight=1)
 
     global entry_target
     global entry_year
     global entry_season
-    global entry_user
+    # global entry_user
     label_target = tk.Label(root, text="輸入查詢編號:", font=("Microsoft JhengHei UI", 16))  # 設置字型大小為12
     entry_target = tk.Entry(root, font=("Microsoft JhengHei UI", 16))
     label_year = tk.Label(root, text="查詢年份:", font=("Microsoft JhengHei UI", 16))  # 設置字型大小為12
     entry_year = tk.Entry(root, font=("Microsoft JhengHei UI", 16))
     label_season = tk.Label(root, text="查詢季度:", font=("Microsoft JhengHei UI", 16))  # 設置字型大小為12
     entry_season = tk.Entry(root, font=("Microsoft JhengHei UI", 16))
-    label_user = tk.Label(root, text="使用者:", font=("Microsoft JhengHei UI", 16))  # 設置字型大小為12
-    entry_user= tk.Entry(root, font=("Microsoft JhengHei UI", 16))
+    # label_user = tk.Label(root, text="使用者:", font=("Microsoft JhengHei UI", 16))  # 設置字型大小為12
+    # entry_user= tk.Entry(root, font=("Microsoft JhengHei UI", 16))
     global button_search
     button_search = tk.Button(root, text="查詢", font=("Microsoft JhengHei UI", 16), command=search)
     global tree
@@ -36,16 +42,16 @@ def init():
     global previousResult
     previousResult = list()
 
-    label_target.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
-    entry_target.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
-    label_year.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
-    entry_year.grid(row=1, column=1, padx=10, pady=10, sticky="nsew")
-    label_season.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
-    entry_season.grid(row=2, column=1, padx=10, pady=10, sticky="nsew")
-    label_user.grid(row=3, column=0, padx=10, pady=10, sticky="nsew")
-    entry_user.grid(row=3, column=1, padx=10, pady=10, sticky="nsew")
-    button_search.grid(row=4, columnspan=2, padx=10, pady=10, sticky="nsew")
-    tree.grid(row=5, columnspan=2, padx=10, pady=10, sticky="nsew")
+    # label_target.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+    # entry_target.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
+    label_year.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+    entry_year.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
+    label_season.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
+    entry_season.grid(row=1, column=1, padx=10, pady=10, sticky="nsew")
+    # label_user.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
+    # entry_user.grid(row=2, column=1, padx=10, pady=10, sticky="nsew")
+    button_search.grid(row=2, columnspan=2, padx=10, pady=10, sticky="nsew")
+    tree.grid(row=3, columnspan=2, padx=10, pady=10, sticky="nsew")
     
     # 設置Treeview文字大小
     style = ttk.Style()
@@ -63,21 +69,51 @@ def show_result(result):
         previousResult.append(tree.insert("", "end", values=(key, value)))
     print(previousResult)
     # previousResult = result
-        
+
+
+def read_stock_numbers_from_excel(filename):
+    stock_numbers = []
+    readwb = openpyxl.load_workbook(filename)
+    readws = readwb.active
+    for row in readws.iter_rows(values_only=True):
+        stock_numbers.append(row[2])
+    print("stock numbers:", *stock_numbers)
+    return stock_numbers
+
+wb = openpyxl.Workbook()
+ws = wb.active
+l = []
+def save_to_excel(results : dict, name):
+    if len(l) == 0: ws.append(["公司編號"] + list(results.keys()))  # 添加標題行
+    l.append([name] + list(results.values()))
+    name = len(l)
+    ws.append([name] + list(results.values()))
+    wb.save("results.xlsx")
+
 def search():
     changeButton(text="搜尋中...請稍候", state = "disabled")
     root.update()
-    setInformation(entry_year.get(), entry_season.get(), entry_target.get())
-    login(entry_user.get())
-    results = dict()
-    try:
-        results.update(getIncome())
-        results.update(getCash())
-        results.update(getDebt())
-        results.update(getRoeRoa())
-    except Exception:
-        print(Exception)
-        results["Error"] = "出現錯誤，請更換座號再試一次"
+    stock_numbers = read_stock_numbers_from_excel("stocks1.xlsx")
+    for stock in stock_numbers:
+        setInformation(entry_year.get(), entry_season.get(), stock)
+        with open("accs.txt", "r", encoding = "utf-8") as file:
+            ids = file.read().splitlines()
+        while 1:
+            try:
+                login(ids[0])
+                results = dict()
+                try:
+                    results.update(getIncome())
+                    results.update(getCash())
+                    results.update(getDebt())
+                    results.update(getRoeRoa())
+                    results.update(getAssets())
+                    save_to_excel(results, stock)
+                    break
+                except Exception:
+                    del ids[0]
+                
+            except: pass
     changeButton(text="查詢", state = "normal")
-    show_result(result=results)
+    # show_result(result=results)
     root.update()

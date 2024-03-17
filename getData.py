@@ -36,11 +36,19 @@ def setInformation(year, season, _target):
 
 def login(id):
     driver.get('https://statementdog.com/users/sign_in')
+
     try:
-        boxType(r'//*[@id="user_email"]', f"h11105{id}@stu.wghs.tp.edu.tw")
+        boxType(r'//*[@id="user_email"]', id)
         boxType(r'//*[@id="user_password"]', "passion")
         clickButton("/html/body/div[3]/div[1]/form/div/button")
-    except: pass
+    except:
+        clickButton("/html/body/div[1]/nav/div/div[2]/ul/li[3]/button/i[2]")
+        clickButton("/html/body/div[1]/nav/div/div[2]/ul/li[3]/button/div/div[2]/ul/li[4]/button")
+        driver.get('https://statementdog.com/users/sign_in')
+        boxType(r'//*[@id="user_email"]', id)
+        boxType(r'//*[@id="user_password"]', "passion")
+        clickButton("/html/body/div[3]/div[1]/form/div/button")
+        # driver.
     sleep(1)
 
 def setRange(url):
@@ -93,12 +101,22 @@ def getDebt():
     print(result)
     return result
 
+def getAssets():
+    setRange(f"https://statementdog.com/analysis/{target}/assets")
+    sleep(2)
+    result = dict()
+    result["固定資產"] = getText(f"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[2]/div[1]/ul/li[2]/table/tr[9]/td[{index}]")
+    result["總資產"] = getText(f"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[2]/div[1]/ul/li[2]/table/tr[11]/td[{index}]")
+    print(result)
+    return result
+    
 # getInformation()
-# login()
+# login("charlesennor@igdinhcao.com")
 # getDebt()
 # getIncome()
 # getCash()
 # getRoeRoa()
+# getAssets()
 
 
 
