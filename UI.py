@@ -93,14 +93,12 @@ def save_to_excel(results : dict, name):
 def search():
     changeButton(text="搜尋中...請稍候", state = "disabled")
     root.update()
-    stock_numbers = read_stock_numbers_from_excel("stocks1.xlsx")
+    stock_numbers = read_stock_numbers_from_excel("stocks.xlsx")
     for stock in stock_numbers:
         setInformation(entry_year.get(), entry_season.get(), stock)
-        with open("output1.txt", "r", encoding = "utf-8") as file:
-            ids = file.read().splitlines()
         while 1:
             try:
-                login(ids[0])
+                login("h1110539@stu.wghs.tp.edu.tw")
                 results = dict()
                 try:
                     results.update(getIncome())
@@ -110,9 +108,7 @@ def search():
                     results.update(getAssets())
                     save_to_excel(results, stock)
                     break
-                except Exception:
-                    del ids[0]
-                
+                except Exception: pass
             except: pass
     changeButton(text="查詢", state = "normal")
     # show_result(result=results)
