@@ -53,7 +53,7 @@ def login(id):
 
 def setRange(url):
     driver.get(url)
-    sleep(2)
+    sleep(1)
     clickButton(r"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[1]/div[1]/table/tr/td[1]/div[1]/i")
     clickButton(r"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[1]/div[1]/table/tr/td[1]/ul/li[4]")
     #2009
@@ -64,7 +64,7 @@ def setRange(url):
 
 def getIncome():
     setRange(f"https://statementdog.com/analysis/{target}/income-statement")
-    sleep(2)
+    sleep(1)
     result = dict()
     result["營收"] = getText(f"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div/div[2]/div[2]/div[1]/ul/li[2]/table/tr[2]/td[{index}]")
     result["毛利"] = getText(f"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div/div[2]/div[2]/div[1]/ul/li[2]/table/tr[3]/td[{index}]")
@@ -75,7 +75,7 @@ def getIncome():
 
 def getCash():
     setRange(f"https://statementdog.com/analysis/{target}/cash-flow-statement")
-    sleep(2)
+    sleep(1)
     result = dict()
     result["營業現金流"] = getText(f"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[2]/div[1]/ul/li[2]/table/tr[4]/td[{index}]")
     result["投資現金流"] = getText(f"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[2]/div[1]/ul/li[2]/table/tr[5]/td[{index}]")
@@ -86,7 +86,7 @@ def getCash():
 
 def getRoeRoa():
     setRange(f"https://statementdog.com/analysis/{target}/roe-roa")
-    sleep(2)
+    sleep(1)
     result = dict()
     result["ROE"] = getText(f"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[2]/div[1]/ul/li[2]/table/tr[2]/td[{index}]")
     result["ROA"] = getText(f"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[2]/div[1]/ul/li[2]/table/tr[3]/td[{index}]")
@@ -95,7 +95,7 @@ def getRoeRoa():
 
 def getDebt():
     setRange(f"https://statementdog.com/analysis/{target}/liabilities-and-equity")
-    sleep(2)
+    sleep(1)
     result = dict()
     result["總負債"] = getText(f"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[2]/div[1]/ul/li[2]/table/tr[11]/td[{index}]")
     print(result)
@@ -103,10 +103,18 @@ def getDebt():
 
 def getAssets():
     setRange(f"https://statementdog.com/analysis/{target}/assets")
-    sleep(2)
+    sleep(1)
     result = dict()
     result["固定資產"] = getText(f"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[2]/div[1]/ul/li[2]/table/tr[9]/td[{index}]")
     result["總資產"] = getText(f"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[2]/div[1]/ul/li[2]/table/tr[11]/td[{index}]")
+    print(result)
+    return result
+
+def getEps():
+    setRange(f"https://statementdog.com/analysis/{target}/eps")
+    sleep(1)
+    result = dict()
+    result["單季EPS"] = getText(f"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[2]/div[1]/ul/li[2]/table/tr[2]/td[{index}]")
     print(result)
     return result
     

@@ -108,11 +108,13 @@ def search():
                     results.update(getDebt())
                     results.update(getRoeRoa())
                     results.update(getAssets())
+                    results.update(getEps())
                     save_to_excel(results, stock)
                     break
                 except Exception: pass
             except: pass
         show_result({"目前進度" : cnt})
+        print("目前進度:", cnt)
         cnt += 1
     changeButton(text="查詢", state = "normal")
     show_result(result={"狀態" : "成功"})
