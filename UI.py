@@ -68,6 +68,7 @@ def show_result(result):
     for key, value in result.items():
         previousResult.append(tree.insert("", "end", values=(key, value)))
     print(previousResult)
+    root.update()
     # previousResult = result
 
 
@@ -110,6 +111,7 @@ def search():
                     break
                 except Exception: pass
             except: pass
+        show_result({"目前進度" : stock})
     changeButton(text="查詢", state = "normal")
     show_result(result={"狀態" : "成功"})
-    root.update()
+    
