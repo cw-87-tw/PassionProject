@@ -95,6 +95,7 @@ def search():
     changeButton(text="搜尋中...請稍候", state = "disabled")
     root.update()
     stock_numbers = read_stock_numbers_from_excel("stocks.xlsx")
+    cnt = 1
     for stock in stock_numbers:
         setInformation(entry_year.get(), entry_season.get(), stock)
         while 1:
@@ -111,7 +112,8 @@ def search():
                     break
                 except Exception: pass
             except: pass
-        show_result({"目前進度" : stock})
+        show_result({"目前進度" : cnt})
+        cnt += 1
     changeButton(text="查詢", state = "normal")
     show_result(result={"狀態" : "成功"})
     
