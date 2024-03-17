@@ -21,18 +21,24 @@ def getText(xpath): return driver.find_element(by = "xpath", value = xpath).text
 
 # basic information
 target = "2330"
-beginYear = 2009
+beginYear = 2010
 index = 1
+year = 2010
+season = 1
 
 # process
-def setInformation(year, season, _target):
+def setInformation(_year, _season, _target):
     global target
     global index
+    global year
+    global season
     target = _target
+    year = _year
+    season = _season
     # target = input("輸入查詢編號:")
     # year = int(input("查詢年份:"))
     # season = int(input("查詢季度:"))
-    index = (int(year) - 2009) * 4 + int(season)
+    index = (int(year) - 2010) * 4 + int(season)
 
 def login(id):
     driver.get('https://statementdog.com/users/sign_in')
@@ -56,11 +62,21 @@ def setRange(url):
     sleep(1)
     clickButton(r"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[1]/div[1]/table/tr/td[1]/div[1]/i")
     clickButton(r"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[1]/div[1]/table/tr/td[1]/ul/li[4]")
-    #2009
-    clickButton(r"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[1]/div[1]/table/tr/td[1]/div[2]/div[1]/select/option[09]")
+    #2010
+    clickButton(r"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[1]/div[1]/table/tr/td[1]/div[2]/div[1]/select/option[10]")
     #2023
     clickButton(r"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[1]/div[1]/table/tr/td[1]/div[2]/div[2]/select/option[23]")
     clickButton(r"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[1]/div[1]/table/tr/td[1]/div[2]/div[3]/div")
+
+def getPrice():
+    driver.get("https://www.twse.com.tw/zh/trading/historical/stock-day.html")
+    clickButton(f"/html/body/div[1]/div/div[2]/main/form/div/div[1]/div[1]/span/select[1]/option[{beginYear - year + 15}]")
+    clickButton(f"/html/body/div[1]/div/div[2]/main/form/div/div[1]/div[1]/span/select[2]/option[{season * 3}]")
+    boxType(f"/html/body/div[1]/div/div[2]/main/form/div/div[1]/div[2]/input", target)
+    clickButton("/html/body/div[1]/div/div[2]/main/form/div/div[1]/div[3]/button")
+    result = {"股價" : getText("/html/body/div[1]/div/div[2]/main/div[2]/div[2]/div[2]/table/tbody/tr[1]/td[7]")}
+    print(result)
+    return result
 
 def getIncome():
     setRange(f"https://statementdog.com/analysis/{target}/income-statement")
@@ -69,7 +85,7 @@ def getIncome():
     result["營收"] = getText(f"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div/div[2]/div[2]/div[1]/ul/li[2]/table/tr[2]/td[{index}]")
     result["毛利"] = getText(f"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div/div[2]/div[2]/div[1]/ul/li[2]/table/tr[3]/td[{index}]")
     result["營業利益"] = getText(f"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div/div[2]/div[2]/div[1]/ul/li[2]/table/tr[8]/td[{index}]")
-    result["稅前利益"] = getText(f"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div/div[2]/div[2]/div[1]/ul/li[2]/table/tr[10]/td[{index}]")
+    result["稅後利益"] = getText(f"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div/div[2]/div[2]/div[1]/ul/li[2]/table/tr[10]/td[{index}]")
     print(result)
     return result
 
@@ -125,7 +141,7 @@ def getEps():
 # getCash()
 # getRoeRoa()
 # getAssets()
-
+getPrice()
 
 
 # driver.quit()    

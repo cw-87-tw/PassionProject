@@ -103,6 +103,7 @@ def search():
         while 1:
             try:
                 results = dict()
+                results.update(getPrice())
                 results.update(getIncome())
                 results.update(getCash())
                 results.update(getDebt())
