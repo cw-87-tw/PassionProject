@@ -1,4 +1,4 @@
 git stash
 git pull
 
-start "" pythonw main.pyw
+start "" pythonw main.py

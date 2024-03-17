@@ -78,7 +78,8 @@ def read_stock_numbers_from_excel(filename):
     readws = readwb.active
     for row in readws.iter_rows(values_only=True):
         stock_numbers.append(row[2])
-    print("stock numbers:", *stock_numbers)
+    # print("stock numbers:", *stock_numbers)
+    print("got stock numbers", len(stock_numbers))
     return stock_numbers
 
 wb = openpyxl.Workbook()
