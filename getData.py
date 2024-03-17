@@ -141,7 +141,7 @@ def getEps():
 # getCash()
 # getRoeRoa()
 # getAssets()
-getPrice()
+# getPrice()
 
 
 # driver.quit()    
