@@ -111,5 +111,5 @@ def search():
                 except Exception: pass
             except: pass
     changeButton(text="查詢", state = "normal")
-    # show_result(result=results)
+    show_result(result={"狀態" : "成功"})
     root.update()
