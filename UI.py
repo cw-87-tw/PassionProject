@@ -97,22 +97,20 @@ def search():
     root.update()
     stock_numbers = read_stock_numbers_from_excel("stocks.xlsx")
     cnt = 1
+    login("h1110539@stu.wghs.tp.edu.tw")
     for stock in stock_numbers:
         setInformation(entry_year.get(), entry_season.get(), stock)
         while 1:
             try:
-                login("h1110539@stu.wghs.tp.edu.tw")
                 results = dict()
-                try:
-                    results.update(getIncome())
-                    results.update(getCash())
-                    results.update(getDebt())
-                    results.update(getRoeRoa())
-                    results.update(getAssets())
-                    results.update(getEps())
-                    save_to_excel(results, stock)
-                    break
-                except Exception: pass
+                results.update(getIncome())
+                results.update(getCash())
+                results.update(getDebt())
+                results.update(getRoeRoa())
+                results.update(getAssets())
+                results.update(getEps())
+                save_to_excel(results, stock)
+                break
             except: pass
         show_result({"目前進度" : cnt})
         print("目前進度:", cnt)
