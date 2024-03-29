@@ -10,7 +10,7 @@ from selenium.webdriver.firefox.options import Options
 options = Options()
 options.add_argument("--headless") # 隱藏瀏覽器視窗
 driver = webdriver.Firefox(options = options)
-print("start web driver")
+# print("start web driver")
 
 # tools
 def clickButton(xpath): 
@@ -45,7 +45,7 @@ def setInformation(_year, _season, _target):
     # year = int(input("查詢年份:"))
     # season = int(input("查詢季度:"))
     index = (int(year) - 2010) * 4 + int(season)
-    print("set", year, season, target, index)
+    # print("set", year, season, target, index)
 
 def login(id):
     driver.get('https://statementdog.com/users/sign_in')
@@ -75,7 +75,7 @@ def setRange(url):
     clickButton(r"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[1]/div[1]/table/tr/td[1]/div[2]/div[3]/div")
 
 def getPrice():
-    print("get price", target, index)
+    # print("get price", target, index)
     driver.get("https://www.twse.com.tw/zh/trading/historical/stock-day.html")
     clickButton(f"/html/body/div[1]/div/div[2]/main/form/div/div[1]/div[1]/span/select[1]/option[{beginYear - year + 15}]")
     clickButton(f"/html/body/div[1]/div/div[2]/main/form/div/div[1]/div[1]/span/select[2]/option[{season * 3}]")

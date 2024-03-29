@@ -30,7 +30,7 @@ def save_to_excel(results : dict, name, searchYear, searchSeason):
     ws.append([name] + list(results.values()))
     # global year
     # global season
-    print("save year", year, "season", season)
+    # print("save year", year, "season", season)
     wb.save(f"{searchYear}年第{searchSeason}季.xlsx")
 
 def search(searchYear, searchSeason):
@@ -47,7 +47,6 @@ def search(searchYear, searchSeason):
     for stock in stock_numbers:
         setInformation(searchYear, searchSeason, stock)
         # print("check", year, season, target, index)
-        print(year, season)
         results = dict()
         results.update(getPrice())
         results.update(getIncome())
@@ -58,7 +57,7 @@ def search(searchYear, searchSeason):
         results.update(getEps())
         save_to_excel(results, stock, searchYear, searchSeason)
         # show_result({"目前進度" : cnt})
-        print("目前進度:", cnt)
+        print("目前進度:", searchYear, searchSeason, cnt)
         cnt += 1
     # changeButton(text="查詢", state = "normal")
     # show_result(result={"狀態" : "成功"})
