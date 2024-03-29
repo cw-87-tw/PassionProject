@@ -23,14 +23,15 @@ def read_stock_numbers_from_excel(filename):
 wb = openpyxl.Workbook()
 ws = wb.active
 l = []
-def save_to_excel(results : dict, name):
+def save_to_excel(results : dict, name, searchYear, searchSeason):
     if len(l) == 0: ws.append(["公司編號"] + list(results.keys()))  # 添加標題行
     l.append([name] + list(results.values()))
     name = len(l)
     ws.append([name] + list(results.values()))
     # global year
     # global season
-    wb.save(f"{year}年第{season}季.xlsx")
+    print("save year", year, "season", season)
+    wb.save(f"{searchYear}年第{searchSeason}季.xlsx")
 
 def search(searchYear, searchSeason):
     # changeButton(text="搜尋中...請稍候", state = "disabled")
@@ -40,11 +41,13 @@ def search(searchYear, searchSeason):
     wb = openpyxl.Workbook()
     global ws
     ws = wb.active
-    stock_numbers = read_stock_numbers_from_excel("stocks1.xlsx")
+    stock_numbers = read_stock_numbers_from_excel("stocks.xlsx")
     cnt = 1
     login("h1110539@stu.wghs.tp.edu.tw")
     for stock in stock_numbers:
         setInformation(searchYear, searchSeason, stock)
+        # print("check", year, season, target, index)
+        print(year, season)
         results = dict()
         results.update(getPrice())
         results.update(getIncome())
@@ -53,7 +56,7 @@ def search(searchYear, searchSeason):
         results.update(getRoeRoa())
         results.update(getAssets())
         results.update(getEps())
-        save_to_excel(results, stock)
+        save_to_excel(results, stock, searchYear, searchSeason)
         # show_result({"目前進度" : cnt})
         print("目前進度:", cnt)
         cnt += 1
