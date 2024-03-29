@@ -8,16 +8,22 @@ from time import sleep
 from selenium.webdriver.firefox.options import Options
 
 options = Options()
-options.add_argument("--headless") # 隱藏瀏覽器視窗
+# options.add_argument("--headless") # 隱藏瀏覽器視窗
 driver = webdriver.Firefox(options = options)
 print("start web driver")
 
 # tools
-def clickButton(xpath): driver.find_element(by = "xpath", value = xpath).click()
+def clickButton(xpath): 
+    try: driver.find_element(by = "xpath", value = xpath).click()
+    except: pass
 def boxType(xpath, msg):
-    box = driver.find_element(by = "xpath", value = xpath)
-    box.send_keys(msg)
-def getText(xpath): return driver.find_element(by = "xpath", value = xpath).text
+    try:
+        box = driver.find_element(by = "xpath", value = xpath)
+        box.send_keys(msg)
+    except: pass
+def getText(xpath): 
+    try: return driver.find_element(by = "xpath", value = xpath).text
+    except: return "Error"
 
 # basic information
 target = "2330"
@@ -135,7 +141,6 @@ def getEps():
     return result
     
 # getInformation()
-# login("charlesennor@igdinhcao.com")
 # getDebt()
 # getIncome()
 # getCash()
