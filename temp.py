@@ -31,7 +31,7 @@ def save_to_excel(results : dict, name, searchYear, searchSeason):
     # global year
     # global season
     # print("save year", year, "season", season)
-    wb.save(f"./results/{searchYear}年第{searchSeason}季.xlsx")
+    wb.save(f"{searchYear}年第{searchSeason}季.xlsx")
 
 def search(searchYear, searchSeason):
     # changeButton(text="搜尋中...請稍候", state = "disabled")
@@ -43,35 +43,35 @@ def search(searchYear, searchSeason):
     ws = wb.active
     stock_numbers = read_stock_numbers_from_excel("stocks.xlsx")
     cnt = 1
-    login("h1110539@stu.wghs.tp.edu.tw")
+    # login("h1110539@stu.wghs.tp.edu.tw")
+    bad = list()
     for stock in stock_numbers:
         setInformation(searchYear, searchSeason, stock)
         # print("check", year, season, target, index)
         results = dict()
-        results.update(getPrice())
-        results.update(getIncome())
-        results.update(getCash())
-        results.update(getDebt())
-        results.update(getRoeRoa())
-        results.update(getAssets())
-        results.update(getEps())
+        try:
+            results.update(getPrice())
+        except: 
+            bad.append(stock)
+        # results.update(getIncome())
+        # results.update(getCash())
+        # results.update(getDebt())
+        # results.update(getRoeRoa())
+        # results.update(getAssets())
+        # results.update(getEps())
         save_to_excel(results, stock, searchYear, searchSeason)
         # show_result({"目前進度" : cnt})
         print("目前進度:", searchYear, searchSeason, cnt)
         cnt += 1
     # changeButton(text="查詢", state = "normal")
+    print("\n\n\n\n")
     # show_result(result={"狀態" : "成功"})
+    print(*bad, sep = "\n")
     
-# for y in range(2014, 2015):
-#     for s in range(1, 5):
-#         print("search", y, s)
-#         search(y, s)
-import sys
-
-_year = int(sys.argv[1])
-_month = int(sys.argv[2])
-print("search ", _year, _month)
-search(_year, _month)
+for y in range(2018, 2019):
+    for s in range(1, 2):
+        print("search", y, s)
+        search(y, s)
 
 # init()
 # root.mainloop() # start program

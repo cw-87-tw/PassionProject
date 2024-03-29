@@ -1,9 +1,16 @@
 try:
     from selenium import webdriver
+    from twstock import Stock
 except:
     import os
     os.system("pip install selenium")
     from selenium import webdriver
+    os.system("pip install twstock")
+    os.system("twstock -U")
+    from twstock import Stock
+    
+
+    
 from time import sleep
 from selenium.webdriver.firefox.options import Options
 
@@ -76,12 +83,15 @@ def setRange(url):
 
 def getPrice():
     # print("get price", target, index)
-    driver.get("https://www.twse.com.tw/zh/trading/historical/stock-day.html")
-    clickButton(f"/html/body/div[1]/div/div[2]/main/form/div/div[1]/div[1]/span/select[1]/option[{beginYear - year + 15}]")
-    clickButton(f"/html/body/div[1]/div/div[2]/main/form/div/div[1]/div[1]/span/select[2]/option[{season * 3}]")
-    boxType(f"/html/body/div[1]/div/div[2]/main/form/div/div[1]/div[2]/input", target)
-    clickButton("/html/body/div[1]/div/div[2]/main/form/div/div[1]/div[3]/button")
-    result = {"股價" : getText("/html/body/div[1]/div/div[2]/main/div[2]/div[2]/div[2]/table/tbody/tr[1]/td[7]")}
+    global year
+    global season
+    global target
+    # print("get Price", type(target), year, season)
+    try:
+        stock = Stock(str(target))
+        result = {"股價" : stock.fetch(year, season * 3)[0].close}
+    except:
+        result = {"股價" : "Error"}
     print(result)
     return result
 
