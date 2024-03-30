@@ -1,8 +1,5 @@
 from selenium import webdriver
 from twstock import Stock
-
-    
-
     
 from time import sleep
 from selenium.webdriver.firefox.options import Options
@@ -14,20 +11,30 @@ driver = webdriver.Firefox(options = options)
 
 # tools
 def clickButton(xpath): 
-    try: driver.find_element(by = "xpath", value = xpath).click()
-    except: pass
+    for i in range(10):
+        try: 
+            driver.find_element(by = "xpath", value = xpath).click()
+            return
+        except: 
+            sleep(0.3)
+    print("unexpected press button\n\n\n")
 def boxType(xpath, msg):
-    try:
-        box = driver.find_element(by = "xpath", value = xpath)
-        box.send_keys(msg)
-    except: pass
+    for i in range(10):
+        try: 
+            box = driver.find_element(by = "xpath", value = xpath)
+            box.send_keys(msg)
+            return
+        except: 
+            sleep(0.3)
+    print("unexpected type\n\n\n")
 def getText(xpath): 
-    while 1:
+    for i in range(10):
         try: 
             return driver.find_element(by = "xpath", value = xpath).text
         except: 
             sleep(0.3)
-
+    print("unexpected get text\n\n\n")
+    return "Error"
 # basic information
 target = "2330"
 beginYear = 2004
@@ -35,7 +42,7 @@ index = 1
 beginYear = 2004
 endYear = 2023
 season = 1
-delay = 1
+delay = 0.2
 
 # process
 def setInformation(_beginYear, _endYear, _target):
@@ -83,6 +90,7 @@ def setRange(url):
     clickButton(r"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[1]/div[1]/table/tr/td[1]/div[2]/div[3]/div")
 
 def getPrice(results: dict):
+    print("Get Price:", target)
     global beginYear
     global endYear
     for year in range(beginYear, endYear + 1):
@@ -95,6 +103,7 @@ def getPrice(results: dict):
     return results
 
 def getIncome(results : dict):
+    print("Get Income:", target)
     setRange(f"https://statementdog.com/analysis/{target}/income-statement")
     sleep(delay)
     global beginYear
@@ -109,6 +118,7 @@ def getIncome(results : dict):
 
 
 def getCash(results: dict):
+    print("Get Cash:", target)
     setRange(f"https://statementdog.com/analysis/{target}/cash-flow-statement")
     sleep(delay)
     global beginYear
@@ -121,6 +131,7 @@ def getCash(results: dict):
     return results
 
 def getRoeRoa(results: dict):
+    print("Get ROE ROA:", target)
     setRange(f"https://statementdog.com/analysis/{target}/roe-roa")
     sleep(delay)
     global beginYear
@@ -133,6 +144,7 @@ def getRoeRoa(results: dict):
     return results
 
 def getDebt(results: dict):
+    print("Get Debt:", target)
     setRange(f"https://statementdog.com/analysis/{target}/liabilities-and-equity")
     sleep(delay)
     global beginYear
@@ -145,6 +157,7 @@ def getDebt(results: dict):
     return results
 
 def getAssets(results: dict):
+    print("Get Assets:", target)
     setRange(f"https://statementdog.com/analysis/{target}/assets")
     sleep(delay)
     global beginYear
@@ -158,6 +171,7 @@ def getAssets(results: dict):
     return results
 
 def getEps(results: dict):
+    print("Get EPS:", target)
     setRange(f"https://statementdog.com/analysis/{target}/eps")
     sleep(delay)
     global beginYear
@@ -188,6 +202,7 @@ def safe_subtract(a, b):
         return "Error"
 
 def getOther(results):
+    print("Get Other:", target)
     global beginYear
     global endYear
     
