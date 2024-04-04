@@ -1,30 +1,5 @@
 from getData import *
-import openpyxl
 
-
-def read_stock_numbers_from_excel(filename):
-    stock_numbers = []
-    readwb = openpyxl.load_workbook(filename)
-    readws = readwb.active
-    for row in readws.iter_rows(values_only=True):
-        stock_numbers.append(row[2])
-    # print("stock numbers:", *stock_numbers)
-    print("got stock numbers", len(stock_numbers))
-    return stock_numbers
-
-
-def save_to_excel(results : list, searchYear, searchSeason):
-    wb = openpyxl.Workbook()
-    ws = wb.active
-    cnt = 0
-    ws.append(["公司編號"] + list(results[0].keys()))  # 添加標題行
-    for i in results:
-        cnt += 1
-        ws.append([cnt] + list(i.values()))
-    # global year
-    # global season
-    # print("save year", year, "season", season)
-    wb.save(f"./results/{searchYear}年第{searchSeason}季.xlsx")
 
 def search(beginYear, endYear):
     # l.clear()
