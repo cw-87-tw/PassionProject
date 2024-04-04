@@ -243,7 +243,22 @@ def getOther(results):
             results[year][season]["股價淨值比"] = safe_divide(results[year][season]["股價"], results[year][season]["每股淨值"])
     return results
 
-
+def getYearROA(results):
+    print("Get ROA:", target)
+    setRange(f"https://statementdog.com/analysis/{target}/roe-roa")
+    sleep(delay)
+    clickButton("/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[1]/div[1]/table/tr/td[3]/ul/li[2]")
+    sleep(delay)
+    global beginYear
+    global endYear
+    for year in range(beginYear, endYear + 1):
+        index = year - beginYear + 1
+        results[year] = getText(f"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[2]/div[1]/ul/li[2]/table/tr[3]/td[{index}]")
+        try: 
+            results[year] = float(results[year])
+            if results[year] < 5: results[year] = 0
+        except: results[year] = 0
+    return results
             
 
 # getInformation()
