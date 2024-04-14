@@ -14,7 +14,7 @@ def clickButton(xpath):
     for i in range(10):
         try: 
             driver.find_element(by = "xpath", value = xpath).click()
-            return
+            return  
         except: 
             sleep(0.3)
     print("unexpected press button\n\n\n")
