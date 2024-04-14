@@ -1,12 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from getData import *
-try:
-    import openpyxl
-except:
-    import os
-    os.system("pip install openpyxl")
-    import openpyxl
+import openpyxl
 root = tk.Tk()
 
 print("start TK")

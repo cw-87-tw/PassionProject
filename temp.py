@@ -2,12 +2,8 @@
 # from tkinter import ttk
 # from UI import *
 from getData import *
-try:
-    import openpyxl
-except:
-    import os
-    os.system("pip install openpyxl")
-    import openpyxl
+import openpyxl
+
 
 
 def read_stock_numbers_from_excel(filename):
