@@ -27,19 +27,23 @@ def boxType(xpath, msg):
         except: 
             sleep(0.3)
     print("unexpected type\n\n\n")
-def getText(xpath): 
+def getText(xpath): # and to float
     for i in range(10):
         try: 
-            return driver.find_element(by = "xpath", value = xpath).text
-        except: 
+            text = driver.find_element(by = "xpath", value = xpath).text
+            try: text = float(text.replace(",", ""))
+            except: pass
+            return text
+        except Exception as e: 
+            # print(e)
             sleep(0.3)
+
     print("unexpected get text\n\n\n")
     return "Error"
 # basic information
 target = "2330"
-beginYear = 2004
 index = 1
-beginYear = 2004
+beginYear = 2001
 endYear = 2023
 delay = 0.2
 
@@ -48,7 +52,7 @@ def read_stock_numbers_from_excel(filename):
     stock_numbers = []
     readwb = openpyxl.load_workbook(filename)
     readws = readwb.active
-    for row in readws.iter_rows(values_only=True)[1:]:
+    for row in readws.iter_rows(values_only=True, min_row = 2):
         stock_numbers.append(row[3])
     # print("stock numbers:", *stock_numbers)
     print("got stock numbers", len(stock_numbers))
@@ -78,7 +82,7 @@ def setInformation(_beginYear, _endYear, _target):
     results = dict()
     for year in range(beginYear, endYear + 1):
         results[year] = dict()
-    # index = int(year) - beginYear
+    # index = int(year) - beginYear + 1
     # print("set", year, season, target, index)
     return results
 
@@ -101,14 +105,16 @@ def login(id):
 def setRange(url):
     driver.get(url)
     sleep(delay)
-    clickButton(r"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[1]/div[1]/table/tr/td[3]/ul/li[2]")
     sleep(delay)
-    clickButton(r"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[1]/div[1]/table/tr/td[1]/div[1]")
-    #2004
-    clickButton(r"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[1]/div[1]/table/tr/td[1]/div[2]/div[1]/select/option[04]")
+    clickButton(r"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[1]/div[1]/table/tr/td[1]/div[1]/span") # 選單
+    clickButton(r"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[1]/div[1]/table/tr/td[1]/ul/li[4]") # 自訂
+    #2001
+    clickButton(r"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[1]/div[1]/table/tr/td[1]/div[2]/div[1]/select/option[01]")
     #2023
     clickButton(r"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[1]/div[1]/table/tr/td[1]/div[2]/div[2]/select/option[23]")
     clickButton(r"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[1]/div[1]/table/tr/td[1]/div[2]/div[3]/div")
+
+    clickButton(r"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[1]/div[1]/table/tr/td[3]/ul/li[2]")
 
 def getPrice(results: dict):
     print("Get Price:", target)
@@ -122,79 +128,59 @@ def getPrice(results: dict):
             results[year]["股價"] = "Error"
     return results
 
-def getIncome(results : dict):
-    print("Get Income:", target)
-    setRange(f"https://statementdog.com/analysis/{target}/income-statement")
+def getCol(line: str) -> int:
+    for i in range(2, 30):
+        v = getText(f"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[2]/div[1]/ul/li[1]/table/tr[{i}]/td")
+        if line == v:
+            return i
+        elif v == "Error": break
+    return 30
+
+def getData(results: dict, target: str, url: str, factors: list) -> list:
+    print(f"Getting data for {target}, factors: {factors}")
+    setRange(url)
     sleep(delay)
     global beginYear
     global endYear
     for year in range(beginYear, endYear + 1):
-        index = int(year) - beginYear
-        results[year]["營收"] = getText(f"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div/div[2]/div[2]/div[1]/ul/li[2]/table/tr[2]/td[{index}]")
-        results[year]["營業利益"] = getText(f"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div/div[2]/div[2]/div[1]/ul/li[2]/table/tr[8]/td[{index}]")
-        results[year]["稅後淨利"] = getText(f"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[2]/div[1]/ul/li[2]/table/tr[10]/td[{index}]")
+        index = int(year) - beginYear + 1
+        for factor in factors:
+            # print(year, beginYear, results)
+            if year == beginYear or results[beginYear][factor] != "Error":
+                results[year][factor] = getText(f"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[2]/div[1]/ul/li[2]/table/tr[{getCol(factor)}]/td[{index}]")
+            else:
+                results[year][factor] = "Error"
     return results
 
+def getIncome(results: dict):
+    return getData(results, target, f"https://statementdog.com/analysis/{target}/income-statement", ["營收", "營業利益", "稅後淨利"])
 
 def getCash(results: dict):
-    print("Get Cash:", target)
-    setRange(f"https://statementdog.com/analysis/{target}/cash-flow-statement")
-    sleep(delay)
-    global beginYear
-    global endYear
-    for year in range(beginYear, endYear + 1):
-        index = int(year) - beginYear
-        results[year]["營業現金流"] = getText(f"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[2]/div[1]/ul/li[2]/table/tr[4]/td[{index}]")
-        results[year]["投資現金流"] = getText(f"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[2]/div[1]/ul/li[2]/table/tr[5]/td[{index}]")
-    return results
+    return getData(results, target, f"https://statementdog.com/analysis/{target}/cash-flow-statement", ["營業現金流", "投資現金流"])
 
 def getRoeRoa(results: dict):
-    print("Get ROE ROA:", target)
-    setRange(f"https://statementdog.com/analysis/{target}/roe-roa")
-    sleep(delay)
-    global beginYear
-    global endYear
-    for year in range(beginYear, endYear + 1):
-        index = int(year) - beginYear
-        results[year]["ROE"] = getText(f"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[2]/div[1]/ul/li[2]/table/tr[2]/td[{index}]")
-        results[year]["ROA"] = getText(f"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[2]/div[1]/ul/li[2]/table/tr[3]/td[{index}]")
-    return results
+    return getData(results, target, f"https://statementdog.com/analysis/{target}/roe-roa", ["ROE", "ROA"])
 
 def getDebt(results: dict):
-    print("Get Debt:", target)
-    setRange(f"https://statementdog.com/analysis/{target}/liabilities-and-equity")
-    sleep(delay)
-    global beginYear
-    global endYear
-    for year in range(beginYear, endYear + 1):
-        index = int(year) - beginYear
-        results[year]["總負債"] = getText(f"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[2]/div[1]/ul/li[2]/table/tr[11]/td[{index}]")
-        results[year]["流動負債"] = getText(f"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[2]/div[1]/ul/li[2]/table/tr[8]/td[{index}]")
-    return results
+    # print("Get Debt:", target)
+    # setRange(f"https://statementdog.com/analysis/{target}/liabilities-and-equity")
+    # sleep(delay)
+    # global beginYear
+    # global endYear
+    # for year in range(beginYear, endYear + 1):
+    #     index = int(year) - beginYear + 1
+    #     if year != beginYear and results[year - 1]["總負債"] != "Error":
+    #         results[year]["總負債"] = getText(f"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[2]/div[1]/ul/li[2]/table/tr[{getCol('總負債')}]/td[{index}]")
+    #     results[year]["流動負債"] = getText(f"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[2]/div[1]/ul/li[2]/table/tr[{getCol('流動負債')}]/td[{index}]")
+    return getData(results, target, f"https://statementdog.com/analysis/{target}/liabilities-and-equity", ["總負債", "流動負債"])
 
 def getAssets(results: dict):
-    print("Get Assets:", target)
-    setRange(f"https://statementdog.com/analysis/{target}/assets")
-    sleep(delay)
-    global beginYear
-    global endYear
-    for year in range(beginYear, endYear + 1):
-        index = int(year) - beginYear
-        results[year]["固定資產"] = getText(f"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[2]/div[1]/ul/li[2]/table/tr[9]/td[{index}]")
-        results[year]["總資產"] = getText(f"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[2]/div[1]/ul/li[2]/table/tr[11]/td[{index}]")
-        results[year]["流動資產"] = getText(f"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[2]/div[1]/ul/li[2]/table/tr[7]/td[{index}]")
-    return results
+    return getData(results, target, f"https://statementdog.com/analysis/{target}/assets", ["固定資產", "總資產", "流動資產"])
 
 def getEps(results: dict):
-    print("Get EPS:", target)
-    setRange(f"https://statementdog.com/analysis/{target}/eps")
-    sleep(delay)
-    global beginYear
-    global endYear
-    for year in range(beginYear, endYear + 1):
-        index = int(year) - beginYear
-        results[year]["年EPS"] = getText(f"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[2]/div[1]/ul/li[2]/table/tr[2]/td[{index}]")
-    return results
+    return getData(results, target, f"https://statementdog.com/analysis/{target}/eps", ["EPS"])
+
+
 
     
 def safe_divide(numerator, denominator):
@@ -215,7 +201,7 @@ def getOther(results):
     global endYear
     
     for year in range(beginYear, endYear + 1):
-        results[year]["股數"] = safe_divide(results[year]["稅後淨利"], results[year]["年EPS"])
+        results[year]["股數"] = safe_divide(results[year]["稅後淨利"], results[year]["EPS"])
         results[year]["淨資產"] = safe_subtract(results[year]["總資產"], results[year]["總負債"])
         results[year]["每股淨值"] = safe_divide(results[year]["淨資產"], results[year]["股數"])
         results[year]["淨流動資產"] = safe_subtract(results[year]["流動資產"], results[year]["總負債"])
@@ -223,7 +209,7 @@ def getOther(results):
         results[year]["營業利率"] = safe_divide(results[year]["稅後淨利"], results[year]["營收"])
         results[year]["自由資本比率"] = safe_divide(results[year]["固定資產"], results[year]["總資產"])
         results[year]["負債除以本期損益"] = safe_divide(results[year]["總負債"], results[year]["營業利益"])
-        results[year]["本益比"] = safe_divide(results[year]["單季EPS"], results[year]["股價"])
+        results[year]["本益比"] = safe_divide(results[year]["EPS"], results[year]["股價"])
         results[year]["股價淨值比"] = safe_divide(results[year]["股價"], results[year]["每股淨值"])
     return results
 
