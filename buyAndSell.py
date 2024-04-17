@@ -1,6 +1,6 @@
 import openpyxl
 
-buySheet = "./template1.xlsx"
+buySheet = "./template48.xlsx"
 outputName = ""
 money = 5000000
 
@@ -20,9 +20,10 @@ def getPrices(year: int) -> dict:
     readws = readwb.active
     idx = 1
     prices = dict()
-    for col in readws.iter_cols(values_only = True, min_col = 3, max_col = 3):
+    for col in readws.iter_cols(values_only = True, min_col = 2, max_col = 2):
         for i in col[1:]:
-            prices[idx] = float(i) if str(i) != "Error" else 1e20
+            prices[idx] = i if type(i) != str else 1e20
+            # print(idx, prices[idx])
             idx += 1
     return prices
 
@@ -50,12 +51,17 @@ for year, targets in allTargets.items():
         money -= prices[stock] * shares
         ws.append([stock, prices[stock], shares, prices[stock] * shares])
         print(f"{year}購買了{stock}，買了{shares}股")
-        hold.append((stock, year))
+        hold.append((stock, shares))
 
     ws.append([])
     ws.append(["剩餘資金", money])
     ws.append([])
     ws.append([])
     ws.append([])
+
+for no, shares in hold:
+    money += shares * prices[no]
+
+ws.append(["最終資金", money])
     
 wb.save("./購買分析結果.xlsx")
