@@ -13,11 +13,11 @@ def search(beginYear, endYear):
         # print("目前進度:", searchYear, searchSeason, cnt)
         cnt += 1 
         results = setInformation(beginYear, endYear, stock)
-        results = getDebt(results)
         results = getPrice(results)
         results = getIncome(results)
         results = getCash(results)
         results = getRoeRoa(results)
+        results = getDebt(results)
         results = getAssets(results)
         results = getEps(results)
         results = getOther(results)
