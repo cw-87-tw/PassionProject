@@ -1,6 +1,7 @@
 import openpyxl
 
-buySheet = "./購買標的.xlsx"
+# buySheet = "./購買標的.xlsx"
+buySheet = input()
 outputName = ""
 money = 5000000
 
@@ -48,6 +49,7 @@ for year, targets in allTargets.items():
     # buy new
     perMoney = money / len(targets)
     for stock in targets:
+        if prices[stock]: raise Exception(f"{year}年無法買入此股票(可能因為下市等因素)\n錯誤編號為{no}")
         shares = perMoney // prices[stock]
         money -= prices[stock] * shares
         ws.append([stock, prices[stock], shares, prices[stock] * shares])
