@@ -9,7 +9,6 @@ ws = wb.active
 
 allTargets = dict()
 for row in ws.iter_rows(values_only=True, min_row = 2):
-    print(row)
     allTargets[row[0]] = list()
     for cell in row[1:]:
         if cell != None: allTargets[row[0]].append(cell)
@@ -32,7 +31,7 @@ hold = [] # (number, 股數)
 wb = openpyxl.Workbook()
 ws = wb.active
 
-for year, targets in allTargets.items():
+for year, targets in allTargets.items()[:-1]:
     prices = getPrices(year) # get this year's prices
 
     # sell old
@@ -60,8 +59,13 @@ for year, targets in allTargets.items():
     ws.append([])
     ws.append([])
 
+
+lastYear = allTargets.keys()[-1]
+prices = getPrices(lastYear) # get this year's prices
+# sell old
 for no, shares in hold:
     money += shares * prices[no]
+hold.clear()
 
 ws.append(["最終資金", money])
     

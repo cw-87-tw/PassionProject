@@ -17,15 +17,20 @@ def getData() -> dict:
             col = col[1:]
             for idx, i in enumerate(col, 1): # 到時候可能不能用 enumerate 因為要用真的股票編號
                 if results[year].get(idx) == None: results[year][idx] = dict()
-                results[year][idx][factor] = i if type(i) != str else 1e20
+                try: results[year][idx][factor] = float(i)
+                except: results[year][idx][factor] = "Error"
                 # print(idx, prices[idx])
     return results
 
-def customSort(results: dict, year: int, numbers: int = 5) -> list:
+def customSort(results: dict, year: int, factor: str, decending: bool = False, numbers: int = 5,) -> list: # number: 要挑出最好的幾個?
     dataList = [(stock, data) for stock, data in results[year].items()]
-    def customKey(item: tuple):
-        return item[1]["股價"]
-    dataList.sort(key = customKey, reverse = False)
+    def customKey(item: tuple): # 用來排序的判準
+        if type(item[1][factor]) != float:
+            print(item)
+            if decending: return -1e20
+            else: return 1e20
+        return item[1][factor]
+    dataList.sort(key = customKey, reverse = decending) # reverse: False 小到大, True 大到小
     buyList = list()
     for stock, data in dataList[:numbers]:
         buyList.append(stock)
@@ -39,9 +44,9 @@ def addData(buyList: list, year: int) -> None:
 
 
 results = getData()
-print(results)
+# print(results)
 for year in range(beginYear, endYear + 1):
-    buyList = customSort(results, year)
+    buyList = customSort(results, year, factor = "股價", decending = False, numbers = 5)
     addData(buyList, year)
 
 
