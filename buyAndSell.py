@@ -1,6 +1,6 @@
 import openpyxl
 
-buySheet = "./template48.xlsx"
+buySheet = "./template.xlsx"
 outputName = ""
 money = 5000000
 
@@ -8,10 +8,11 @@ wb = openpyxl.load_workbook(buySheet)
 ws = wb.active
 
 allTargets = dict()
-for col in ws.iter_cols(values_only=True, min_col = 2):
-    allTargets[col[0]] = list()
-    for cell in col[1:]:
-        if cell != None: allTargets[col[0]].append(cell)
+for row in ws.iter_rows(values_only=True, min_row = 2):
+    print(row)
+    allTargets[row[0]] = list()
+    for cell in row[1:]:
+        if cell != None: allTargets[row[0]].append(cell)
 
 print(allTargets)
 

@@ -4,9 +4,9 @@ beginYear = 2014
 beginYear = int(input("beginYear:"))
 endYear = 2023 
 endYear = int(input("endYear:"))
-results = dict()
 
-def getData():
+def getData() -> dict:
+    results = dict()
     for year in range(beginYear, endYear + 1):
         results[year] = dict()
         readwb = openpyxl.load_workbook(f"./results/{year}年.xlsx")
@@ -19,4 +19,21 @@ def getData():
                 if results[year].get(idx) == None: results[year][idx] = dict()
                 results[year][idx][factor] = i if type(i) != str else 1e20
                 # print(idx, prices[idx])
-    
+
+def customSort(results: dict, year: int, numbers: int = 5) -> list:
+    pass
+
+wb = openpyxl.Workbook()
+ws = wb.active
+def addData(buyList: list, year: int) -> None:
+    if year == beginYear: ws.append(["年份", "以下為購買的對象編號"])
+    ws.append([year] + buyList)
+
+
+results = getData()
+for year in range(beginYear, endYear + 1):
+    buyList = customSort(results, year)
+    addData(buyList, year)
+
+
+wb.save("購買標的.xlsx")
