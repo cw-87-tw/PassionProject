@@ -1,6 +1,6 @@
 import openpyxl
 
-buySheet = "./template.xlsx"
+buySheet = "./購買標的.xlsx"
 outputName = ""
 money = 5000000
 
