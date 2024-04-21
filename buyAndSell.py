@@ -31,11 +31,12 @@ hold = [] # (number, 股數)
 wb = openpyxl.Workbook()
 ws = wb.active
 
-for year, targets in allTargets.items()[:-1]:
+for year, targets in allTargets.items():
     prices = getPrices(year) # get this year's prices
 
     # sell old
     for no, shares in hold:
+        if prices[no] == 1e20: raise Exception(f"{year}年無法賣出此股票(可能因為下市等因素)\n錯誤編號為{no}")
         money += shares * prices[no]
     hold.clear()
 
@@ -60,10 +61,11 @@ for year, targets in allTargets.items()[:-1]:
     ws.append([])
 
 
-lastYear = allTargets.keys()[-1]
+lastYear = list(allTargets.keys())[-1] + 1
 prices = getPrices(lastYear) # get this year's prices
 # sell old
 for no, shares in hold:
+    if prices[no] == 1e20: raise Exception(f"{lastYear}年無法賣出此股票(可能因為下市等因素)\n錯誤編號為{no}")
     money += shares * prices[no]
 hold.clear()
 

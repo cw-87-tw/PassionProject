@@ -1,9 +1,9 @@
 import openpyxl
 
-beginYear = 2014 
-beginYear = int(input("beginYear:"))
+beginYear = 2013
+# beginYear = int(input("beginYear:"))
 endYear = 2022
-endYear = int(input("endYear:"))
+# endYear = int(input("endYear:"))
 
 def getData() -> dict:
     results = dict()
