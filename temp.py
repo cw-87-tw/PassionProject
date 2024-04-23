@@ -4,7 +4,7 @@ beginYear = 2013
 # beginYear = int(input("beginYear:"))
 endYear = 2022
 # endYear = int(input("endYear:"))
-factor = "營收"
+factor = "淨資產 - 長期負債"
 highest = True
 numbers = 5
 
@@ -28,11 +28,11 @@ def getData() -> dict:
 def customSort(results: dict, year: int, factor: str, highest: bool = False, numbers: int = 5,) -> list: # number: 要挑出最好的幾個?
     dataList = [(stock, data) for stock, data in results[year].items()]
     def customKey(item: tuple): # 用來排序的判準
-        if type(item[1][factor]) != float or item[1]["股價"] == "Error":
+        if type(item[1]["淨資產"]) != float or type(item[1]["長期負債"]) != float or item[1]["股價"] == "Error":
             # print(item)
             if highest: return -1e20
             else: return 1e20
-        return item[1][factor]
+        return item[1]["淨資產"] - item[1]["長期負債"]
     dataList.sort(key = customKey, reverse = highest) # reverse: False 小到大, True 大到小
     buyList = list()
     for stock, data in dataList[:numbers]:
