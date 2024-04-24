@@ -1,12 +1,11 @@
 import openpyxl
 
+# the following can be modified by user
 beginYear = 2013
-# beginYear = int(input("beginYear:"))
 endYear = 2022
-# endYear = int(input("endYear:"))
-factors = [("營業利益率", 1)] # 每個 factor: (name, 要算幾份)
+factors = [("營業利率", 1)] # 每個 factor: (name, 要算幾份)
 numbers = 5
-
+# end
 
 def getData() -> dict:
     """
@@ -47,24 +46,25 @@ def customSort(results: dict, year: int, factors: list, numbers: int = 5) -> lis
     parameters:
         results: results from getData function
         year: the target year
-        factors:
-            a list of factor, each factor is formatted like (factorName, multiple)
-            the index would
-    
+        factors: a list of factor, each factor is formatted like (factorName, multiple)
+    the sorting function will calculate the points for each stock, and return the top {numbers} stocks
+    the points would be calculated by finding the index, the from {len(stocks)} to 1, multiply the {multiple} of the factor
     """
     dataList = [(stock, data) for stock, data in results[year].items()]
     
-    indexed = []
-    for factor, multi in factors:
-        tmp = set()
+    indexed = dict()
+    for factor, multiple in factors:
+        tmp = list()
         for stock, data in dataList:
-            if type[data[factor]] != str: tmp.add(data[factor])
-        indexed[factor] = sorted(list(tmp))
+            if type(data[factor]) != str: tmp.append(data[factor])
+        indexed[factor] = sorted(tmp)
 
     def customKey(item: tuple): # 用來排序的判準
         key = 0
-        for factor in factors:
-            if type(item[1][factor]) != str: key +=
+        for factor, multiple in factors:
+            if type(item[1][factor]) != str and type(item[1]["股價"]) != str: key += indexed[factor].index(item[1][factor]) * multiple
+            else: key += (-1e20) * multiple
+        return key
 
     dataList.sort(key = customKey, reverse = True) # 大到小
     buyList = list()
@@ -72,17 +72,25 @@ def customSort(results: dict, year: int, factors: list, numbers: int = 5) -> lis
         buyList.append(stock)
     return buyList
 
+class Sheet:
+    def __init__(self) -> None:
+        self.wb = openpyxl.Workbook()
+        self.ws = self.wb.active
 
-wb = openpyxl.Workbook()
-ws = wb.active
-def addData(buyList: list, year: int) -> None:
-    if year == beginYear: ws.append(["年份", "以下為購買的對象編號"])
-    ws.append([year] + buyList)
+    def addData(self, buyList: list, year: int) -> None:
+        global beginYear
+        if year == beginYear: self.ws.append(["年份", "以下為購買的對象編號"])
+        self.ws.append([year] + buyList)
+    
+    def save(self, filename: str):
+        self.wb.save(f"{filename}.xlsx")
 
 results = getData()
+output = Sheet()
 for year in range(beginYear, endYear + 1):
     buyList = customSort(results, year, factors = factors, numbers = numbers) # 每年購買
-    addData(buyList, year) # add new results to sheet
+    output.addData(buyList, year) # add new results to sheet
 
-
-wb.save(f"購買標的({','.join(factors)}).xlsx")
+outputList = list()
+for factor, multiple in factors: outputList.append(f"{factor} x {multiple}")
+output.save(f"./buyResults/購買標的({','.join(outputList)}).xlsx")

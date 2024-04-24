@@ -86,11 +86,11 @@ def setInformation(_beginYear, _endYear, _target):
     # print("set", year, season, target, index)
     return results
 
-def login(id):
+def login(id, password: str = "passion"):
     driver.get('https://statementdog.com/users/sign_in')
     try:
         boxType(r'//*[@id="user_email"]', id)
-        boxType(r'//*[@id="user_password"]', "passion")
+        boxType(r'//*[@id="user_password"]', password)
         clickButton("/html/body/div[3]/div[1]/form/div/button")
     except:
         clickButton("/html/body/div[1]/nav/div/div[2]/ul/li[3]/button/i[2]")
@@ -162,16 +162,6 @@ def getRoeRoa(results: dict):
     return getData(results, target, f"https://statementdog.com/analysis/{target}/roe-roa", ["ROE", "ROA"])
 
 def getDebt(results: dict):
-    # print("Get Debt:", target)
-    # setRange(f"https://statementdog.com/analysis/{target}/liabilities-and-equity")
-    # sleep(delay)
-    # global beginYear
-    # global endYear
-    # for year in range(beginYear, endYear + 1):
-    #     index = int(year) - beginYear + 1
-    #     if year != beginYear and results[year - 1]["總負債"] != "Error":
-    #         results[year]["總負債"] = getText(f"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[2]/div[1]/ul/li[2]/table/tr[{getCol('總負債')}]/td[{index}]")
-    #     results[year]["流動負債"] = getText(f"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[2]/div[1]/ul/li[2]/table/tr[{getCol('流動負債')}]/td[{index}]")
     return getData(results, target, f"https://statementdog.com/analysis/{target}/liabilities-and-equity", ["總負債", "流動負債"])
 
 def getAssets(results: dict):
@@ -213,22 +203,6 @@ def getOther(results):
         results[year]["股價淨值比"] = safe_divide(results[year]["股價"], results[year]["每股淨值"])
     return results
 
-def getYearROA(results):
-    print("Get ROA:", target)
-    setRange(f"https://statementdog.com/analysis/{target}/roe-roa")
-    sleep(delay)
-    clickButton("/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[1]/div[1]/table/tr/td[3]/ul/li[2]")
-    sleep(delay)
-    global beginYear
-    global endYear
-    for year in range(beginYear, endYear + 1):
-        index = year - beginYear + 1
-        results[year] = getText(f"/html/body/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[2]/div[1]/ul/li[2]/table/tr[3]/td[{index}]")
-        try: 
-            results[year] = float(results[year])
-            if results[year] < 5: results[year] = 0
-        except: results[year] = 0
-    return results
             
 
 # getInformation()
