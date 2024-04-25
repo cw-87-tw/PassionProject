@@ -3,7 +3,7 @@ import openpyxl
 # the following can be modified by user
 beginYear = 2013
 endYear = 2022
-factors = [("營業利率", 1)] # 每個 factor: (name, 要算幾份)
+factors = [("流動資產", 8), ("流動負債", -16), ("淨流動資產", 4), ("長期負債", -4), ("自由資本比率", 8), ("營業利率", 40), ("本益比", 15), ("股價淨值比", 25)] # 每個 factor: (name, 要算幾份)
 numbers = 5
 # end
 
@@ -63,7 +63,7 @@ def customSort(results: dict, year: int, factors: list, numbers: int = 5) -> lis
         key = 0
         for factor, multiple in factors:
             if type(item[1][factor]) != str and type(item[1]["股價"]) != str: key += indexed[factor].index(item[1][factor]) * multiple
-            else: key += (-1e20) * multiple
+            else: key += (-1e20) * abs(multiple)
         return key
 
     dataList.sort(key = customKey, reverse = True) # 大到小
@@ -93,4 +93,5 @@ for year in range(beginYear, endYear + 1):
 
 outputList = list()
 for factor, multiple in factors: outputList.append(f"{factor} x {multiple}")
-output.save(f"./buyResults/購買標的({','.join(outputList)}).xlsx")
+print("檔案成功儲存:", f"./buyResults/購買標的({','.join(outputList)}).xlsx")
+output.save(f"./buyResults/購買標的({','.join(outputList)})")
