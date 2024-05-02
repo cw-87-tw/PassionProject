@@ -1,10 +1,12 @@
 import openpyxl
+import os
 
 # the following can be modified by user
 beginYear = 2013
 endYear = 2022
 factors = [("流動資產", 8), ("流動負債", -16), ("淨流動資產", 4), ("長期負債", -4), ("自由資本比率", 8), ("營業利率", 40), ("本益比", 15), ("股價淨值比", 25)] # 每個 factor: (name, 要算幾份)
 numbers = 5
+dir = "." # pick a folder path
 # end
 
 def getData() -> dict:
@@ -27,7 +29,7 @@ def getData() -> dict:
     results = dict()
     for year in range(beginYear, endYear + 1):
         results[year] = dict()
-        readwb = openpyxl.load_workbook(f"./results/{year}年.xlsx")
+        readwb = openpyxl.load_workbook(f"{dir}/results/{year}年.xlsx")
         readws = readwb.active
 
         for col in readws.iter_cols(values_only = True, min_col = 2):
@@ -85,13 +87,19 @@ class Sheet:
     def save(self, filename: str):
         self.wb.save(f"{filename}.xlsx")
 
-results = getData()
-output = Sheet()
-for year in range(beginYear, endYear + 1):
-    buyList = customSort(results, year, factors = factors, numbers = numbers) # 每年購買
-    output.addData(buyList, year) # add new results to sheet
+def run(): # 按下按鈕執行
+    results = getData()
+    output = Sheet()
+    for year in range(beginYear, endYear + 1):
+        buyList = customSort(results, year, factors = factors, numbers = numbers) # 每年購買
+        output.addData(buyList, year) # add new results to sheet
 
-outputList = list()
-for factor, multiple in factors: outputList.append(f"{factor} x {multiple}")
-print("檔案成功儲存:", f"./buyResults/購買標的({','.join(outputList)}).xlsx")
-output.save(f"./buyResults/購買標的({','.join(outputList)})")
+    outputList = list()
+    for factor, multiple in factors: outputList.append(f"{factor} x {multiple}")
+
+    if "buyResults" not in os.listdir(dir): os.mkdir("buyResults")
+    
+    print("檔案成功儲存:", f"./buyResults/購買標的({','.join(outputList)}).xlsx")
+    output.save(f"./buyResults/購買標的({','.join(outputList)})")
+
+run() # 按下按鈕執行
