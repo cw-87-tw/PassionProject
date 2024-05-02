@@ -2,8 +2,9 @@ import openpyxl
 
 # buySheet = "./購買標的.xlsx"
 buySheet = input("excel 檔案名稱:")
-outputName = ""
+outputName = "購買分析結果"
 money = 5000000
+
 
 wb = openpyxl.load_workbook(buySheet)
 ws = wb.active
@@ -73,4 +74,4 @@ hold.clear()
 
 ws.append(["最終資金", money])
     
-wb.save("./buyResults/購買分析結果.xlsx")
+wb.save(f"./{outputName}.xlsx")
