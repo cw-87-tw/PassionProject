@@ -3,6 +3,7 @@ from tkinter import ttk
 from tkinter import filedialog
 import openpyxl
 import os
+import tkinter.messagebox as mb
 
 class App:
     def __init__(self, root):
@@ -123,7 +124,20 @@ class App:
 
 def getData(beginYear, endYear, factors, dir, numbers) -> dict:
     """
-    這個函數可以從網絡上爬取的結果中獲取數據
+    the function can get data from the results crawled on the Net
+    the workbook must be located at the desinated directory(./results/)
+    it would get all the data in the following format
+    results = { 
+        beginYear: {
+            1: {
+                factor1: 123,
+                factor2: "Error"...
+            },
+            2: {
+            
+            }...
+        }...
+    }
     """
     results = dict()
     for year in range(beginYear, endYear + 1):
@@ -142,7 +156,13 @@ def getData(beginYear, endYear, factors, dir, numbers) -> dict:
 
 def customSort(results: dict, year: int, factors: list, numbers: int) -> list:
     """
-    這個函數可以返回要買的最佳股票數量
+    This function can return the best stock numbers to buy
+    parameters:
+        results: results from getData function
+        year: the target year
+        factors: a list of factor, each factor is formatted like (factorName, multiple)
+    the sorting function will calculate the points for each stock, and return the top {numbers} stocks
+    the points would be calculated by finding the index, the from {len(stocks)} to 1, multiply the {multiple} of the factor
     """
     dataList = [(stock, data) for stock, data in results[year].items()]
     
@@ -168,17 +188,25 @@ def customSort(results: dict, year: int, factors: list, numbers: int) -> list:
     return buyList
 
 def run(results, beginYear, endYear, factors, dir, numbers):
-    output = Sheet(beginYear)
-    for year in range(beginYear, endYear + 1):
-        buyList = customSort(results, year, factors, numbers)
-        output.addData(buyList, year)
+    try:
+        output = Sheet(beginYear)
+        for year in range(beginYear, endYear + 1):
+            buyList = customSort(results, year, factors, numbers)
+            output.addData(buyList, year)
 
-    outputList = [f"{factor} x {multiple}" for factor, multiple in factors]
+        outputList = [f"{factor} x {multiple}" for factor, multiple in factors]
 
-    if "buyResults" not in os.listdir(dir): os.mkdir("buyResults")
+        saveDir = "buyTargets"
+        if saveDir not in os.listdir(dir): os.mkdir(saveDir)
     
-    print("檔案成功儲存:", f"./buyResults/購買標的({','.join(outputList)}).xlsx")
-    output.save(f"./buyResults/購買標的({','.join(outputList)})")
+        output.save(f"{dir}/{saveDir}/購買標的({','.join(outputList)})")
+        print("檔案成功儲存:", f"{dir}/{saveDir}/購買標的({','.join(outputList)}).xlsx")
+        mb.showinfo("成功", f"檔案儲存成功: {dir}/{saveDir}/購買標的({','.join(outputList)}).xlsx")
+    except Exception as e:
+        print("失敗，錯誤訊息如下:")
+        print(e)
+        mb.showerror("失敗", f"檔案儲存失敗，錯誤訊息如下:\n{e}")
+
 
 class Sheet:
     def __init__(self, beginYear):
