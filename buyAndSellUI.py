@@ -115,7 +115,7 @@ def buyAndSell(allTargets: dict, outputName: str, money: float) -> None:
 
     ws.append(["最終資金", money])
         
-    saveDir = "analysisResults"
+    saveDir = "analyzeResults"
     if saveDir not in os.listdir(): os.mkdir(saveDir)
     wb.save(f"./{saveDir}/{outputName}.xlsx")
     mb.showinfo("成功", f"檔案成功儲存: {os.getcwd()}/{saveDir}/{outputName}.xlsx")
