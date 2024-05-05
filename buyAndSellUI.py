@@ -75,7 +75,7 @@ def getBuy(buySheet) -> dict:
     return allTargets
 
 def getPrices(year: int, data: str) -> dict:
-    readwb = openpyxl.load_workbook(f"{data}/results/{year}年.xlsx")
+    readwb = openpyxl.load_workbook(f"{data}/{year}年.xlsx")
     readws = readwb.active
     idx = 1
     prices = dict()
@@ -129,7 +129,7 @@ def buyAndSell(allTargets: dict, data: str, outputName: str, money: float) -> No
     hold.clear()
 
     ws.append(["最終資金", money])
-    ws.append(["投資報酬率", f"{money / preMoney / 100}%"])
+    ws.append(["投資報酬率", f"{round(money / preMoney * 100, 4)}%"])
         
     saveDir = "analyzeResults"
     if saveDir not in os.listdir(): os.mkdir(saveDir)
