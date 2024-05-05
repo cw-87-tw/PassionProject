@@ -3,6 +3,7 @@ from twstock import Stock
 import openpyxl
 from time import sleep
 from selenium.webdriver.firefox.options import Options
+import os
 
 options = Options()
 # options.add_argument("--headless") # 隱藏瀏覽器視窗
@@ -53,12 +54,12 @@ def read_stock_numbers_from_excel(filename):
     readwb = openpyxl.load_workbook(filename)
     readws = readwb.active
     for row in readws.iter_rows(values_only=True, min_row = 2):
-        stock_numbers.append(row[3])
+        stock_numbers.append(row[1])
     # print("stock numbers:", *stock_numbers)
     print("got stock numbers", len(stock_numbers))
     return stock_numbers
 
-def save_to_excel(results : list, searchYear):
+def save_to_excel(results : list, searchYear, dir):
     wb = openpyxl.Workbook()
     ws = wb.active
     cnt = 0
@@ -69,7 +70,8 @@ def save_to_excel(results : list, searchYear):
     # global year
     # global season
     # print("save year", year, "season", season)
-    wb.save(f"./results/{searchYear}年.xlsx")
+    if "results" not in os.listdir(dir): os.mkdir(dir + "/results")
+    wb.save(f"{dir}/results/{searchYear}年.xlsx")
 
 def setInformation(_beginYear, _endYear, _target):
     global target
@@ -91,14 +93,14 @@ def login(id, password: str = "passion"):
     try:
         boxType(r'//*[@id="user_email"]', id)
         boxType(r'//*[@id="user_password"]', password)
-        clickButton("/html/body/div[3]/div[1]/form/div/button")
+        clickButton("/html/body/div[2]/div[1]/form/div/button")
     except:
         clickButton("/html/body/div[1]/nav/div/div[2]/ul/li[3]/button/i[2]")
         clickButton("/html/body/div[1]/nav/div/div[2]/ul/li[3]/button/div/div[2]/ul/li[4]/button")
         driver.get('https://statementdog.com/users/sign_in')
         boxType(r'//*[@id="user_email"]', id)
         boxType(r'//*[@id="user_password"]', "passion")
-        clickButton("/html/body/div[3]/div[1]/form/div/button")
+        clickButton("/html/body/div[2]/div[1]/form/div/button")
         # driver.
     sleep(1)
 

@@ -197,7 +197,7 @@ def run(results, beginYear, endYear, factors, dir, numbers):
         outputList = [f"{factor} x {multiple}" for factor, multiple in factors]
 
         saveDir = "buyTargets"
-        if saveDir not in os.listdir(dir): os.mkdir(saveDir)
+        if saveDir not in os.listdir(dir): os.mkdir(dir + "/" + saveDir)
     
         output.save(f"{dir}/{saveDir}/購買標的({','.join(outputList)})")
         print("檔案成功儲存:", f"{dir}/{saveDir}/購買標的({','.join(outputList)}).xlsx")

@@ -1,10 +1,19 @@
 from getData import *
 
+# the following can be modified by users
+# stocksSheet = input("查詢的股票編號表格:")
+# saveDir = input("存results的資料夾:")
+beginYear = 2001
+endYear = 2023
+account = "h1110539@stu.wghs.tp.edu.tw"
+password = "passion"
+# end
+login("h1110539@stu.wghs.tp.edu.tw")
 
-def search(beginYear, endYear):
+def search(beginYear, endYear, dir, account, password):
     stock_numbers = read_stock_numbers_from_excel("stocks.xlsx")
     cnt = 1
-    login("h1110539@stu.wghs.tp.edu.tw")
+    login(account, password)
     finalResult = {}
     for year in range(beginYear, endYear + 1):
         finalResult[year] = list()
@@ -26,15 +35,10 @@ def search(beginYear, endYear):
             finalResult[year].append(results[year])
     
     for year in range(beginYear, endYear + 1):
-        save_to_excel(finalResult[year], year)
+        save_to_excel(finalResult[year], year, dir)
     
-# fast search
-# import sys
+def run():
+    search(beginYear, endYear, saveDir, account, password)
 
-# _year = int(sys.argv[1])
-# _month = int(sys.argv[2])
-# print("search ", _year, _month)
-# search(_year, _month)
-                
-search(2001, 2023)
-driver.quit()
+
+# driver.quit()
