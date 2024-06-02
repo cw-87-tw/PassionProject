@@ -1,9 +1,11 @@
+import os
 from selenium import webdriver
 from twstock import Stock
 import openpyxl
-from time import sleep
 from selenium.webdriver.firefox.options import Options
-import os
+
+    
+from time import sleep
 
 options = Options()
 # options.add_argument("--headless") # 隱藏瀏覽器視窗

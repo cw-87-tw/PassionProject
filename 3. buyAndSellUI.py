@@ -1,9 +1,12 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
-import openpyxl
-import tkinter.messagebox as mb
 import os
+try:
+    import openpyxl
+except:
+    os.system("pip install openpyxl")
+import tkinter.messagebox as mb
 
 class App:
     def __init__(self, root):
