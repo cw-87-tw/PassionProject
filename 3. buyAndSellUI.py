@@ -25,7 +25,7 @@ class App:
         self.browse_button = ttk.Button(root, text="瀏覽...", command=self.browse_buy_sheet)
         self.browse_button.grid(row=0, column=2, padx=5, pady=5)
 
-        self.labelData = ttk.Label(root, text="資料目錄:")
+        self.labelData = ttk.Label(root, text="股價目錄(results folder):")
         self.labelData.grid(row=1, column=0, padx=5, pady=5, sticky="w")
         self.data_entry = ttk.Entry(root)
         self.data_entry.grid(row=1, column=1, padx=5, pady=5)

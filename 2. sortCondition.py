@@ -145,7 +145,7 @@ def getData(beginYear, endYear, factors, dir, numbers) -> dict:
     results = dict()
     for year in range(beginYear, endYear + 1):
         results[year] = dict()
-        readwb = openpyxl.load_workbook(f"{dir}/{year}年.xlsx")
+        readwb = openpyxl.load_workbook(f"{dir}/results/{year}年.xlsx")
         readws = readwb.active
 
         for col in readws.iter_cols(values_only=True, min_col=2):
